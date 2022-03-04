@@ -1,0 +1,53 @@
+version: '3'
+
+volumes:
+  bddw_auction_local_postgres_data: {}
+  bddw_auction_local_postgres_data_backups: {}
+
+services:
+  django:
+    build:
+      context: .
+      dockerfile: ./compose/local/django/Dockerfile
+    image: bddw_auction_local_django
+    container_name: bddw_auction_local_django
+    platform: linux/x86_64
+    depends_on:
+      - postgres
+    volumes:
+      - .:/app:z
+    env_file:
+      - ./.envs/.local/.django
+      - ./.envs/.local/.postgres
+    ports:
+      - "8000:8000"
+    command: /start
+
+  postgres:
+    build:
+      context: .
+      dockerfile: ./compose/production/postgres/Dockerfile
+    image: bddw_auction_production_postgres
+    container_name: bddw_auction_local_postgres
+    volumes:
+      - bddw_auction_local_postgres_data:/var/lib/postgresql/data:Z
+      - bddw_auction_local_postgres_data_backups:/backups:z
+    env_file:
+      - ./.envs/.local/.postgres
+
+  docs:
+    image: bddw_auction_local_docs
+    container_name: bddw_auction_local_docs
+    platform: linux/x86_64
+    build:
+      context: .
+      dockerfile: ./compose/local/docs/Dockerfile
+    env_file:
+      - ./.envs/.local/.django
+    volumes:
+      - ./docs:/docs:z
+      - ./config:/app/config:z
+      - ./bddw_auction:/app/bddw_auction:z
+    ports:
+      - "9000:9000"
+    command: /start-docs

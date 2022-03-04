@@ -1,0 +1,7 @@
+# PostgreSQL
+# ------------------------------------------------------------------------------
+POSTGRES_HOST=postgres
+POSTGRES_PORT=5432
+POSTGRES_DB=bddw_auction
+POSTGRES_USER=wszupaXwEOyFZCGHGCGHsBnlrXtuwmRY
+POSTGRES_PASSWORD=drAyGGGgR6Q0nTd0aOwP18QCyXOLMxkngGgSI8i87MrHt4Gin083E5UbIQL7viwS

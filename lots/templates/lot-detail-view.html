@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+    <div class ="container">
+        <div class="text-center">
+            <h1 style="font-size: 24px" class="title pt-5 mb-4">LOT 087 -  85″ BRONZE CREDENZA WITH DARK PATINAED BRONZE EXTERIOR AND BERRY FACES</h1>
+            <img style="" src="https://bddwacution-sitedata.s3.us-east-2.amazonaws.com/wp-content/uploads/2022/01/13174405/89407221060030-1.jpg" width="855" height="684">
+        </div>
+    </div>
+    <div hx-get="/lots/poll/1" hx-trigger="every 2s">
+        <h2>Current High Bid: {{high_bid.value}}</h2>
+        <p>High Bidder: {{high_bid.user}}</h2>
+        {% if request.user != high_bid.user %}
+        <p>You are not winning!</p>
+        {% else %}
+        <p>You are the high bidder</p>
+        {% endif %}
+    </div>
+    <div class="bid-form text-center">
+        <form hx-post="{% url 'lots:bid' lot.pk %}">
+            {% csrf_token %}
+            {{ form }}
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+
+
+{% endblock content %}

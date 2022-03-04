@@ -1,0 +1,9 @@
+<div class="bid-form text-center">
+    {% if form.errors %}
+    {{form.errors}}
+    {% endif %}
+    <form hx-post="{% url 'lots:bid' %}">
+        {% crispy form %}
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>

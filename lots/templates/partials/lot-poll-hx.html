@@ -1,0 +1,7 @@
+<h2>Current High Bid: {{high_bid.value}}</h2>
+<p>High Bidder: {{high_bid.user}}</h2>
+{% if request.user != high_bid.user %}
+<p>You are not winning!</p>
+{% else %}
+<p>You are the high bidder</p>
+{% endif %}
