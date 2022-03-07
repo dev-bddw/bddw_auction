@@ -58,7 +58,10 @@
 
     </div> <!-- /container -->
 
-    {% block modal %}{% endblock modal %}
+    {% block modal %}
+    <div id="modals-here">
+    </div>
+    {% endblock modal %}
 
     {% block inline_javascript %}
     {% comment %}
@@ -69,5 +72,7 @@
     </script>
     {% endcomment %}
     {% endblock inline_javascript %}
+  <footer style="height: 100px;">
+  </footer>
   </body>
 </html>
