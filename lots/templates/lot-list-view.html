@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+    <div class ="container">
+        <div class="text-center pb-5">
+            <h1 style="font-size: 24px" class="title pt-5">AUCTION 30</h1>
+            <h3 style="font-size: 24px" class="">MARCH 11 - 15 </h1>
+            <h4 style="font-size: 24px" class="title mb-4">2022</h1>
+        </div>
+    </div>
+    <div class="row">
+        {% for lot in lots  %}
+        <div class="col-3 text-center">
+            <div class="card border-0" style="width: 18rem;">
+                <img class="card-img-top" src="https://bddwacution-sitedata.s3.us-east-2.amazonaws.com/wp-content/uploads/2022/01/13174405/89407221060030-1.jpg" alt="Card image cap">
+                <div class="card-body">
+                    <h6 class="card-title">LOT 087 -  85″ BRONZE CREDENZA WITH DARK PATINAED BRONZE EXTERIOR AND BERRY FACES</h6>
+                    <div class="card-text">
+                        <p>
+                        HIGH BIDDER: {{lot.current_high_bidder}}
+                        <br>
+                        HIGH BID: {{lot.current_high_bid}}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+{% endblock content %}
+
+{% block inline_javascript %}
+
+
+{% endblock inline_javascript %}

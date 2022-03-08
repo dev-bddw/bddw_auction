@@ -5,6 +5,11 @@ from bids.forms import BidForm
 from .models import Lot
 
 
+def lot_list_view(request):
+
+    return render(request, "lot-list-view.html", {"lots": Lot.objects.all()})
+
+
 def lot_detail_view(request, pk: int):
     user = request.user
     lot = get_object_or_404(Lot, pk=pk)
