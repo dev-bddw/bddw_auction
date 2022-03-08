@@ -18,5 +18,11 @@ class Lot(models.Model):
             Lot.objects.get(pk=self.pk)
             return self.starting
 
+    def current_high_bidder(self):
+        if Bid.objects.filter(lot=self):
+            return Bid.objects.filter(lot=self).order_by("-value")[0].user
+        else:
+            return "No High Bidder"
+
     def is_over(self):
         return timezone.now() > self.end_time

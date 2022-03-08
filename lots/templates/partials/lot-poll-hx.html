@@ -7,6 +7,12 @@
     {% else %}
     <div class="pt-5 text-center">
         <h2>Current High Bid: {{lot.current_high_bid}}</h2>
+        <h2>User: {{lot.current_high_bidder}}</h2>
+        {% if lot.current_high_bidder != request.user %}
+        <p style="color: red;">YOU ARE NOT WINNING</p>
+        {% else %}
+        <p style="color: blue;">YOU ARE WINNING</p>
+        {% endif %}
         <p>ENDS {{ lot.end_time }}</p>
         <p>{{lot.end_time|timeuntil}}</p>
     </div>
