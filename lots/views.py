@@ -1,16 +1,8 @@
 from django.shortcuts import get_object_or_404, render
 
 from bids.forms import BidForm
-from bids.models import Bid
 
 from .models import Lot
-
-
-def return_high_bid(lot):
-    if Bid.objects.filter(lot=lot):
-        return Bid.objects.filter(lot=lot).order_by("-value")[0]
-    else:
-        return lot.starting
 
 
 def lot_detail_view(request, pk: int):
@@ -19,8 +11,7 @@ def lot_detail_view(request, pk: int):
 
     form = BidForm(
         {
-            "inc_step": lot.increment,
-            "value": return_high_bid(lot),
+            "value": lot.current_high_bid() + 100,
             "user": user,
             "lot": lot,
         }
@@ -29,7 +20,7 @@ def lot_detail_view(request, pk: int):
     return render(
         request,
         "lot-detail-view.html",
-        {"lot": lot, "high_bid": return_high_bid(lot), "form": form},
+        {"lot": lot, "form": form},
     )
 
 
@@ -41,7 +32,7 @@ def bid_hx(request, pk: int):
         bid = request.POST["value"]
         form = BidForm(request.POST)
 
-        if form.is_valid() and int(request.POST["value"]) > return_high_bid(lot):
+        if form.is_valid() and int(request.POST["value"]) > lot.current_high_bid():
             form = form.save()
             message = f"Your of {bid} bid was placed successfully"
 
@@ -55,11 +46,19 @@ def bid_hx(request, pk: int):
 
 
 def lot_poll_hx(request, pk: int):
-    form = BidForm
+    user = request.user
+    lot = get_object_or_404(Lot, pk=pk)
+    form = BidForm(
+        {
+            "value": lot.current_high_bid() + 100,
+            "user": user,
+            "lot": lot,
+        }
+    )
     lot = get_object_or_404(Lot, pk=pk)
 
     return render(
         request,
         "partials/lot-poll-hx.html",
-        {"lot": lot, "high_bid": return_high_bid(lot), "form": form},
+        {"lot": lot, "form": form},
     )

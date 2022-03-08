@@ -1,5 +1,6 @@
 <div hx-get="/lots/poll/1" hx-trigger="every 20s" hx-swap="outerHTML" >
     <h2>Current High Bid: {{high_bid.value}}</h2>
+    <p>Time Until Lot Close: {{lot.end_time|timeuntil}}
     <p>High Bidder: {{high_bid.user}}</h2>
     {% if request.user != high_bid.user %}
     <p>You are not winning!</p>

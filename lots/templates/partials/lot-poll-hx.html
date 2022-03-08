@@ -1,3 +1,21 @@
-<div class="pt-5 text-center" hx-get="/lots/poll/1" hx-trigger="every 20s" hx-swap="outerHTML" >
-    <h2>Current High Bid: {{high_bid}}</h2>
+<div class="bid-container" hx-get="/lots/poll/1" hx-trigger="every 5s" hx-swap="outerHTML">
+    {% if lot.is_over %}
+    <div class="text-center auction-closed">
+        <h1>This Auction Lot has closed</h1>
+        <p>High Bid: {{lot.current_high_bid}}</p>
+    </div>
+    {% else %}
+    <div class="pt-5 text-center">
+        <h2>Current High Bid: {{lot.current_high_bid}}</h2>
+        <p>ENDS {{ lot.end_time }}</p>
+        <p>{{lot.end_time|timeuntil}}</p>
+    </div>
+    <div class="text-center">
+        <form hx-post="{% url 'lots:bid' lot.pk %}" _="on htmx:afterOnLoad wait 10ms then add .show to #modal then add .show to #modal-backdrop" hx-trigger="submit" hx-target="#modals-here" hx-swap="outerHTML">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-dark">BID</button>
+        </form>
+    </div>
+    {% endif %}
 </div>
