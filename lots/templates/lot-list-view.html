@@ -12,22 +12,37 @@
     </div>
     <div class="row">
         {% for lot in lots  %}
-        <div class="col-3 text-center">
-            <div class="card border-0" style="width: 18rem;">
-                <img class="card-img-top" src="https://bddwacution-sitedata.s3.us-east-2.amazonaws.com/wp-content/uploads/2022/01/13174405/89407221060030-1.jpg" alt="Card image cap">
-                <div class="card-body">
-                    <h6 class="card-title">LOT 087 -  85″ BRONZE CREDENZA WITH DARK PATINAED BRONZE EXTERIOR AND BERRY FACES</h6>
-                    <div class="card-text">
-                        <p>
-                        HIGH BIDDER: {{lot.current_high_bidder}}
-                        <br>
-                        HIGH BID: {{lot.current_high_bid}}
-                        </p>
+            <div class="col-3 text-center">
+                <a style="color:black; text-decoration:none;" href="{{lot.get_absolute_url }}">
+                <div hx-get="{% url 'lots:list-poll' lot.pk %}" hx-trigger="every 15s" hx-swap="outerHTML" class="card border-0" style="width: 18rem;">
+                    <img class="card-img-top" src="https://bddwacution-sitedata.s3.us-east-2.amazonaws.com/wp-content/uploads/2022/01/13174405/89407221060030-1.jpg" alt="Card image cap">
+                    <div class="card-body">
+                        <h6 class="card-title" style="font-size: 12px;">LOT 087 -  85″ BRONZE CREDENZA WITH DARK PATINAED BRONZE EXTERIOR AND BERRY FACES</h6>
+                        <div class="card-text">
+                            {% if lot.is_over %}
+                            THIS LOT IS OVER
+                            <br>
+                            WINNER: {{lot.current_high_bidder}}
+                            <br>
+                            WINNING BID: {{lot.current_high_bid}}
+                            {% else %}
+                            <p>
+                            HIGH BIDDER: {{lot.current_high_bidder}}
+                            <br>
+                            HIGH BID: {{lot.current_high_bid}}
+                            <br>
+                            <br>
+                            {{lot.end_time|timeuntil}}
+                            {% endif %}
+                            </p>
+                        </div>
                     </div>
+                </a>
                 </div>
             </div>
-        </div>
+
         {% endfor %}
+    </div>
 {% endblock content %}
 
 {% block inline_javascript %}

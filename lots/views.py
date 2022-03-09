@@ -50,7 +50,7 @@ def bid_hx(request, pk: int):
         return render(request, "partials/bid-modal-hx.html", {"message": message})
 
 
-def lot_poll_hx(request, pk: int):
+def lot_detail_poll_hx(request, pk: int):
     user = request.user
     lot = get_object_or_404(Lot, pk=pk)
     form = BidForm(
@@ -64,6 +64,25 @@ def lot_poll_hx(request, pk: int):
 
     return render(
         request,
-        "partials/lot-poll-hx.html",
+        "partials/lot-detail-poll-hx.html",
+        {"lot": lot, "form": form},
+    )
+
+
+def lot_list_poll_hx(request, pk: int):
+    user = request.user
+    lot = get_object_or_404(Lot, pk=pk)
+    form = BidForm(
+        {
+            "value": lot.current_high_bid() + 100,
+            "user": user,
+            "lot": lot,
+        }
+    )
+    lot = get_object_or_404(Lot, pk=pk)
+
+    return render(
+        request,
+        "partials/lot-list-poll-hx.html",
         {"lot": lot, "form": form},
     )

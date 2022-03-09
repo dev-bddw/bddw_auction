@@ -26,3 +26,8 @@ class Lot(models.Model):
 
     def is_over(self):
         return timezone.now() > self.end_time
+
+    def get_absolute_url(self):
+        from django.urls import reverse
+
+        return reverse("lots:lot-detail", kwargs={"pk": self.pk})
