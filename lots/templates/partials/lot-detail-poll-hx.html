@@ -5,8 +5,10 @@
         <p>High Bid: {{lot.current_high_bid}}</p>
     </div>
     {% else %}
+    {% if lot.has_bids %}
     <div class="pt-5 text-center">
-        <h2>Current High Bid: {{lot.current_high_bid}}</h2>
+        <h2>Current Proxy Bid: {{lot.actual_proxy_bid}}</h2>
+        <h2>Current Real Bid Value Bid: {{lot.current_high_bid}}</h2>
         <h2>User: {{lot.current_high_bidder}}</h2>
         {% if lot.current_high_bidder != request.user %}
         <p style="color: red;">YOU ARE NOT WINNING</p>
@@ -16,6 +18,16 @@
         <p>ENDS {{ lot.end_time }}</p>
         <p>{{lot.end_time|timeuntil}}</p>
     </div>
+    {% else %}
+    <div class="pt-5 text-center">
+        <h2>Current Bid: {{lot.starting}}</h2>
+        {% if lot.current_high_bidder != request.user %}
+        {% endif %}
+        <p>ENDS {{ lot.end_time }}</p>
+        <p>{{lot.end_time|timeuntil}}</p>
+    </div>
+    {% endif %}
+
     <div class="text-center">
         <form hx-post="{% url 'lots:bid' lot.pk %}" _="on htmx:afterOnLoad wait 10ms then add .show to #modal then add .show to #modal-backdrop" hx-trigger="submit" hx-target="#modals-here" hx-swap="outerHTML">
             {% csrf_token %}

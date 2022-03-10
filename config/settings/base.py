@@ -61,7 +61,8 @@ DJANGO_APPS = [
     "django.contrib.sites",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    # "django.contrib.humanize", # Handy template tags
+    "django.contrib.humanize",
+    "jazzmin",
     "django.contrib.admin",
     "django.forms",
 ]
@@ -71,6 +72,7 @@ THIRD_PARTY_APPS = [
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
+    "silk",
 ]
 
 LOCAL_APPS = [
@@ -134,6 +136,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.common.BrokenLinkEmailsMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "silk.middleware.SilkyMiddleware",
 ]
 
 # STATIC
@@ -273,3 +276,8 @@ SOCIALACCOUNT_FORMS = {"signup": "bddw_auction.users.forms.UserSocialSignupForm"
 
 # Your stuff...
 # ------------------------------------------------------------------------------
+
+
+# JAZZMIN
+# https://django-jazzmin.readthedocs.io/configuration/
+# ------------
