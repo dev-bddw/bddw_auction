@@ -6,6 +6,9 @@
     <div class ="container">
         <div class="text-center">
             <h1 style="font-size: 24px" class="title pt-5 mb-4">LOT 087 -  85″ BRONZE CREDENZA WITH DARK PATINAED BRONZE EXTERIOR AND BERRY FACES</h1>
+            <div class="text-left">
+            <p><a href="{% url 'lots:lot-list' %}#{{lot.pk}}">---BACK TO ALL LOTS</a></p>
+            </div>
             <img style="" src="https://bddwacution-sitedata.s3.us-east-2.amazonaws.com/wp-content/uploads/2022/01/13174405/89407221060030-1.jpg" width="855" height="684">
         </div>
     </div>
@@ -43,7 +46,8 @@
             <p>{{lot.end_time|timeuntil}}</p>
         </div>
         {% endif %}
-
+    </div>
+    <div>
         <div class="text-center">
             <form hx-post="{% url 'lots:bid' lot.pk %}" _="on htmx:afterOnLoad wait 10ms then add .show to #modal then add .show to #modal-backdrop" hx-trigger="submit" hx-target="#modals-here" hx-swap="outerHTML">
                 {% csrf_token %}

@@ -44,10 +44,12 @@ def bid_hx(request, pk: int):
                     message = f"Your bid of {bid} was not more than your proxy bid"
                 else:
                     form = form.save()
-                    message = f"Your bid of {bid} bid was placed successfully"
+                    message = f"Your proxy bid was succesfully increased to {bid}."
             else:
+                # you've been outbid email
+                # outbid = lot.current_high_bidder()
                 form = form.save()
-                message = f"Your of {bid} bid was placed successfully"
+                message = f"Your of {bid} bid was placed successfully."
 
         elif not form.is_valid():
             message = f"There was a problem with your form value, your bid of {bid} was unsuccessful"

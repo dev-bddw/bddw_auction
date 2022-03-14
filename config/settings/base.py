@@ -281,3 +281,8 @@ SOCIALACCOUNT_FORMS = {"signup": "bddw_auction.users.forms.UserSocialSignupForm"
 # JAZZMIN
 # https://django-jazzmin.readthedocs.io/configuration/
 # ------------
+
+
+# STRIPE
+STRIPE_SECRET_KEY = env("STRIPE_SECRET_KEY")
+STRIPE_PBULIC_KEY = env("STRIPE_PUBLIC_KEY")

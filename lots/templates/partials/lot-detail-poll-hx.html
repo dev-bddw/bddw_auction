@@ -26,14 +26,6 @@
         <p>ENDS {{ lot.end_time }}</p>
         <p>{{lot.end_time|timeuntil}}</p>
     </div>
-    {% endif %}
-
-    <div class="text-center">
-        <form hx-post="{% url 'lots:bid' lot.pk %}" _="on htmx:afterOnLoad wait 10ms then add .show to #modal then add .show to #modal-backdrop" hx-trigger="submit" hx-target="#modals-here" hx-swap="outerHTML">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" class="btn btn-dark">BID</button>
-        </form>
-    </div>
+        {% endif %}
     {% endif %}
 </div>
