@@ -73,6 +73,7 @@ THIRD_PARTY_APPS = [
     "allauth.account",
     "allauth.socialaccount",
     "silk",
+    "django_crontab",
 ]
 
 LOCAL_APPS = [
@@ -134,7 +135,6 @@ MIDDLEWARE = [
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
-    "django.middleware.common.BrokenLinkEmailsMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "silk.middleware.SilkyMiddleware",
 ]
@@ -286,3 +286,6 @@ SOCIALACCOUNT_FORMS = {"signup": "bddw_auction.users.forms.UserSocialSignupForm"
 # STRIPE
 STRIPE_SECRET_KEY = env("STRIPE_SECRET_KEY")
 STRIPE_PBULIC_KEY = env("STRIPE_PUBLIC_KEY")
+
+# CRONJOBS
+CRONJOBS = [("*/5 * * * *", "lots.cron.end_of_auction_check")]

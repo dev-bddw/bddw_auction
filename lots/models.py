@@ -1,6 +1,9 @@
+import os
+
 from django.db import models
 from django.utils import timezone
 
+from bddw_auction.users.models import User
 from bids.models import Bid
 
 # the acutal bid doesn't matter much.
@@ -14,7 +17,20 @@ class Auction(models.Model):
     description = models.TextField(blank=True, null=True, max_length=300)
 
 
+class LotImage(models.Model):
+    img = models.ImageField(default=None, null=True, upload_to="lots")
+
+    def base_file(self):
+        return os.path.basename(self.img.path)
+
+
 class Lot(models.Model):
+    sku = models.CharField(blank=True, null=True, max_length=300)
+    name = models.CharField(blank=True, null=True, max_length=300)
+    description = models.TextField(blank=True, null=True, max_length=500)
+
+    img = models.ImageField(default=None, null=True, upload_to="lots")
+
     starting = models.IntegerField(null=False, blank=False)
     increment = models.IntegerField(null=False, blank=False)
 
@@ -24,6 +40,16 @@ class Lot(models.Model):
     auction = models.ForeignKey(
         "Auction", blank=True, null=True, on_delete=models.CASCADE
     )
+
+    # end of auction behavior
+
+    winner = models.ForeignKey(User, blank=True, null=True, on_delete=models.PROTECT)
+    price = models.IntegerField(default=0, null=True)
+    is_closed = models.BooleanField(default=False)
+    is_paid = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.name
 
     def has_bids(self):
         return len(Bid.objects.filter(lot=self)) > 0
@@ -60,8 +86,13 @@ class Lot(models.Model):
 
         return reverse("lots:lot-detail", kwargs={"pk": self.pk})
 
-    def winner(self):
-        if self.is_over():
-            return self.current_high_bidder()
+    # call with cron job at end of auction
+    def end_auction(self):
+        if self.is_over() and self.has_bids() and not self.is_closed:
+            self.winner = self.current_high_bidder()
+            self.price = self.current_high_bid()
+            self.is_closed = True
+            self.save()
+            return 1
         else:
-            return "Auction not over yet"
+            return 0

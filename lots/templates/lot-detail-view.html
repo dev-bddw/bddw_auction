@@ -5,19 +5,19 @@
 {% block content %}
     <div class ="container">
         <div class="text-center">
-            <h1 style="font-size: 24px" class="title pt-5 mb-4">LOT 087 -  85″ BRONZE CREDENZA WITH DARK PATINAED BRONZE EXTERIOR AND BERRY FACES</h1>
+            <h1 style="font-size: 24px" class="title pt-5 mb-4">{{lot.name}}</h1>
             <div class="text-left">
             <p><a href="{% url 'lots:lot-list' %}#{{lot.pk}}">---BACK TO ALL LOTS</a></p>
             </div>
-            <img style="" src="https://bddwacution-sitedata.s3.us-east-2.amazonaws.com/wp-content/uploads/2022/01/13174405/89407221060030-1.jpg" width="855" height="684">
+            <img style="" src="{{lot.img}}" width="855" height="684">
         </div>
     </div>
     <div class="pt-5 container lot-description text-center" >
         <div>
-        <p>LOT DESCRIPTION</p>
+        <p>{% autoescape off %}{{lot.description|slice:"1:-1"}}{% endautoescape %}</p>
         </div>
     </div>
-    <div class="bid-container" hx-get="{% url 'lots:detail-poll' lot.pk %}" hx-trigger="every 5s" hx-swap="outerHTML">
+    <div class="bid-container pt-5" hx-get="{% url 'lots:detail-poll' lot.pk %}" hx-trigger="every 5s" hx-swap="outerHTML">
         {% if lot.is_over %}
         <div class="text-center auction-closed">
             <h1>This Auction Lot has closed</h1>

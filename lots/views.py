@@ -1,13 +1,22 @@
+import csv
+import io
+
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
 
 from bids.forms import BidForm
 
-from .models import Lot
+from .cron import end_of_auction
+from .models import Auction, Lot
 
 
 def lot_list_view(request):
-
     return render(request, "lot-list-view.html", {"lots": Lot.objects.all()})
+
+
+def lazy_cron_endpoint(request):
+    status = end_of_auction()
+    return HttpResponse(f"{status}")
 
 
 def lot_detail_view(request, pk: int):
@@ -27,6 +36,37 @@ def lot_detail_view(request, pk: int):
         "lot-detail-view.html",
         {"lot": lot, "form": form},
     )
+
+
+def lot_upload(request):
+
+    if request.method == "POST":
+
+        csv_file = request.FILES["file"]
+        # let's check if it is a csv file
+        if not csv_file.name.endswith(".csv"):
+            pass
+            # messages.error(request, 'THIS IS NOT A CSV FILE')
+        data_set = csv_file.read().decode("UTF-8")
+        # setup a stream which is when we loop through each line we are able to handle a data in a stream
+        io_string = io.StringIO(data_set)
+        next(io_string)
+        for column in csv.reader(io_string, delimiter=",", quotechar='"'):
+            Lot.objects.update_or_create(
+                sku=column[0],
+                name=column[1],
+                description=column[2],
+                auction=Auction.objects.get(pk=column[3]),
+                starting=column[4],
+                increment=column[5],
+                start_time=column[6],
+                end_time=column[7],
+                img=column[8],
+            )
+        return render(request, "lot-upload.html", {})
+
+    else:
+        return render(request, "lot-upload.html", {})
 
 
 def bid_hx(request, pk: int):

@@ -1,7 +1,7 @@
-<div hx-get="{% url 'lots:list-poll' lot.pk %}" hx-trigger="every 5s" hx-swap="outerHTML" class="card border-0" style="width: 18rem;">
-    <img class="card-img-top" src="https://bddwacution-sitedata.s3.us-east-2.amazonaws.com/wp-content/uploads/2022/01/13174405/89407221060030-1.jpg" alt="Card image cap">
+<div hx-get="{% url 'lots:list-poll' lot.pk %}" hx-trigger="every 15s" hx-swap="outerHTML" class="card border-0" style="width: 18rem;">
+    <img class="card-img-top" src="{{lot.img}}" alt="Card image cap">
     <div class="card-body">
-        <h6 class="card-title" style="font-size: 12px;">LOT 087 -  85″ BRONZE CREDENZA WITH DARK PATINAED BRONZE EXTERIOR AND BERRY FACES</h6>
+        <h6 class="card-title" style="font-size: 12px;">{{lot.name}}</h6>
         <div class="card-text">
             {% if lot.is_over %}
             THIS LOT IS OVER
@@ -21,4 +21,3 @@
             </p>
         </div>
     </div>
-</div>
