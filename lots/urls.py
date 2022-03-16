@@ -13,10 +13,10 @@ from .views import (
 app_name = "lots"
 
 urlpatterns = [
-    path("", view=lot_list_view, name="lot-list"),
+    path("<pk>", view=lot_list_view, name="lot-list"),
     path("auction-end/", view=lazy_cron_endpoint, name="endpoint"),
     path("lot-upload/", view=lot_upload, name="lot-upload"),
-    path("<pk>/", view=lot_detail_view, name="lot-detail"),
+    path("lot/<pk>/", view=lot_detail_view, name="lot-detail"),
     # htmx
     path("bid/<pk>", view=bid_hx, name="bid"),
     path("detail-hxpoll/<pk>", view=lot_detail_poll_hx, name="detail-poll"),

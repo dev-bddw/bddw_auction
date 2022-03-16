@@ -7,11 +7,18 @@ from django.shortcuts import get_object_or_404, render
 from bids.forms import BidForm
 
 from .cron import end_of_auction
-from .models import Auction, Lot
+from .models import Auction, Lot, LotImage
 
 
-def lot_list_view(request):
-    return render(request, "lot-list-view.html", {"lots": Lot.objects.all()})
+def lot_list_view(request, pk: int):
+    return render(
+        request,
+        "lot-list-view.html",
+        {
+            "auction": Auction.objects.get(id=pk),
+            "lots": Lot.objects.filter(auction_id=pk),
+        },
+    )
 
 
 def lazy_cron_endpoint(request):
@@ -23,18 +30,21 @@ def lot_detail_view(request, pk: int):
     user = request.user
     lot = get_object_or_404(Lot, pk=pk)
 
+    images = LotImage.objects.filter(file_name__startswith=lot.sku)
+
     form = BidForm(
         {
-            "value": lot.current_high_bid() + 100,
+            "value": lot.current_high_bid() + lot.increment,
             "user": user,
             "lot": lot,
-        }
+        },
+        step=lot.increment,
     )
 
     return render(
         request,
         "lot-detail-view.html",
-        {"lot": lot, "form": form},
+        {"lot": lot, "form": form, "images": images},
     )
 
 
@@ -63,6 +73,23 @@ def lot_upload(request):
                 end_time=column[7],
                 img=column[8],
             )
+            if column[9]:
+                LotImage.objects.update_or_create(img=column[9])
+            if column[10]:
+                LotImage.objects.update_or_create(img=column[10])
+            if column[11]:
+                LotImage.objects.update_or_create(img=column[11])
+            if column[12]:
+                LotImage.objects.update_or_create(img=column[12])
+            if column[13]:
+                LotImage.objects.update_or_create(img=column[13])
+            if column[14]:
+                LotImage.objects.update_or_create(img=column[14])
+            if column[15]:
+                LotImage.objects.update_or_create(img=column[15])
+            if column[16]:
+                LotImage.objects.update_or_create(img=column[16])
+
         return render(request, "lot-upload.html", {})
 
     else:
@@ -105,10 +132,11 @@ def lot_detail_poll_hx(request, pk: int):
     lot = get_object_or_404(Lot, pk=pk)
     form = BidForm(
         {
-            "value": lot.current_high_bid() + 100,
+            "value": lot.current_high_bid() + lot.increment,
             "user": user,
             "lot": lot,
-        }
+        },
+        step=lot.increment,
     )
     lot = get_object_or_404(Lot, pk=pk)
 

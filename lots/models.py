@@ -15,12 +15,23 @@ from bids.models import Bid
 class Auction(models.Model):
     name = models.CharField(blank=False, null=False, max_length=100)
     description = models.TextField(blank=True, null=True, max_length=300)
+    is_active = models.BooleanField(default=False, blank=False, null=False)
 
 
 class LotImage(models.Model):
     img = models.ImageField(default=None, null=True, upload_to="lots")
+    file_name = models.CharField(default=None, null=True, max_length=100)
+
+    def __str__(self):
+        return self.file_name
+
+    def save(self, *args, **kwargs):
+        self.file_name = self.base_file()
+        super(LotImage, self).save(*args, **kwargs)
 
     def base_file(self):
+        # we need to overwrite save method and create a char-field for file name and
+        # use this method to set the filename char field
         return os.path.basename(self.img.path)
 
 
@@ -55,7 +66,10 @@ class Lot(models.Model):
         return len(Bid.objects.filter(lot=self)) > 0
 
     def current_high_bid(self):
-        return self.return_next_high_bid_plus_increment()
+        if not self.has_bids():
+            return self.starting
+        else:
+            return self.return_next_high_bid_plus_increment()
 
     def actual_proxy_bid(self):
         return Bid.objects.filter(lot=self).order_by("-value")[0].value

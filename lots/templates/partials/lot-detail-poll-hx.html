@@ -1,4 +1,4 @@
-<div class="bid-container" hx-get="{% url 'lots:detail-poll' lot.pk %}" hx-trigger="every 5s" hx-swap="outerHTML">
+<div class="pt-5 bid-container" hx-get="{% url 'lots:detail-poll' lot.pk %}" hx-trigger="every 5s" hx-swap="outerHTML">
     {% if lot.is_over %}
     <div class="text-center auction-closed">
         <h1>This Auction Lot has closed</h1>

@@ -183,6 +183,7 @@ TEMPLATES = [
                 "django.template.context_processors.tz",
                 "django.contrib.messages.context_processors.messages",
                 "bddw_auction.users.context_processors.allauth_settings",
+                "lots.context.get_auctions",
             ],
         },
     }

@@ -1,15 +1,21 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
 
+{% block title %}{{lot.name}}{% endblock title %}
+
 
 {% block content %}
     <div class ="container">
         <div class="text-center">
             <h1 style="font-size: 24px" class="title pt-5 mb-4">{{lot.name}}</h1>
             <div class="text-left">
-            <p><a href="{% url 'lots:lot-list' %}#{{lot.pk}}">---BACK TO ALL LOTS</a></p>
+            <p><a href="{% url 'lots:lot-list' lot.auction.pk %}#{{lot.pk}}">---BACK TO ALL LOTS</a></p>
             </div>
-            <img style="" src="{{lot.img}}" width="855" height="684">
+            <img class="pb-4" src="{{lot.img}}" width="855" height="684">
+            <br>
+            {% for image in images  %}
+            <img src="{{image.img}}"  width="200" class="img-thumbnail">
+            {% endfor %}
         </div>
     </div>
     <div class="pt-5 container lot-description text-center" >

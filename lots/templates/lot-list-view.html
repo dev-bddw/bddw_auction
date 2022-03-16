@@ -1,13 +1,13 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
 
+{% block title %}BDDW {{auction.name}}{% endblock title %}
 
 {% block content %}
     <div class ="container">
         <div class="text-center pb-5">
-            <h1 style="font-size: 24px" class="title pt-5">AUCTION 30</h1>
-            <h3 style="font-size: 24px" class="">MARCH 11 - 15 </h1>
-            <h4 style="font-size: 24px" class="title mb-4">2022</h1>
+            <h1 style class="title pt-5">{{auction.name}}</h1>
+            {% autoescape off %}{{auction.description}}{% endautoescape %}
         </div>
     </div>
     <div class="row">
