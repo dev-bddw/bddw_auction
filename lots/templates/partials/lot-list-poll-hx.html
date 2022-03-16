@@ -1,23 +1,36 @@
-<div hx-get="{% url 'lots:list-poll' lot.pk %}" hx-trigger="every 15s" hx-swap="outerHTML" class="card border-0" style="width: 18rem;">
-    <img class="card-img-top" src="{{lot.img}}" alt="Card image cap">
-    <div class="card-body">
-        <h6 class="card-title" style="font-size: 12px;">{{lot.name}}</h6>
-        <div class="card-text">
-            {% if lot.is_over %}
-            THIS LOT IS OVER
-            <br>
-            WINNER: {{lot.current_high_bidder}}
-            <br>
-            WINNING BID: {{lot.current_high_bid}}
-            {% else %}
-            <p>
-            HIGH BIDDER: {{lot.current_high_bidder}}
-            <br>
-            HIGH BID: {{lot.current_high_bid}}
-            <br>
-            <br>
-            {{lot.end_time|timeuntil}}
-            {% endif %}
-            </p>
-        </div>
+<div hx-get="{% url 'lots:list-poll' auction.pk %}" hx-trigger="every 15s" hx-swap="outerHTML"  class="container">
+    <div class="row">
+        {% for lot in lots  %}
+            <div id="{{lot.pk}}" class="col-3 text-center">
+                <div class="card border-0" style="width: 18rem;">
+                    <a style="color:black; text-decoration:none;" href="{{lot.get_absolute_url }}">
+                    <img class="card-img-top" src="{{lot.img}}" alt="Card image cap">
+                    <div class="card-body">
+                        <h6 class="card-title" style="font-size: 16px;">{{lot.name}}</h6>
+                        <div style="font-size: 14px;" class="card-text">
+                            {% if lot.is_over %}
+                            THIS LOT IS OVER
+                            <br>
+                            WINNER: {{lot.current_high_bidder}}
+                            <br>
+                            WINNING BID: {{lot.current_high_bid}}
+                            {% else %}
+                            {% if lot.has_bids %}
+                            HIGH BIDDER: {{lot.current_high_bidder}}
+                            <br>
+                            HIGH BID: {{lot.current_high_bid}}
+                            {% else %}
+                            STARTING BID: {{lot.current_high_bid}}
+                            {% endif %}
+                            <br>
+                            {{lot.end_time|timeuntil}}
+                            {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                    </a>
+                </div>
+            </div>
+        {% endfor %}
     </div>
+</div>

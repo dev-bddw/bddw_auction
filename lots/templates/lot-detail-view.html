@@ -20,10 +20,10 @@
     </div>
     <div class="pt-5 container lot-description text-center" >
         <div>
-        <p>{% autoescape off %}{{lot.description|slice:"1:-1"}}{% endautoescape %}</p>
+        <p>{% autoescape off %}{{lot.description|slice:"0:-1"}}{% endautoescape %}</p>
         </div>
     </div>
-    <div class="bid-container pt-5" hx-get="{% url 'lots:detail-poll' lot.pk %}" hx-trigger="every 5s" hx-swap="outerHTML">
+    <div class="bid-container pt-3" hx-get="{% url 'lots:detail-poll' lot.pk %}" hx-trigger="every 5s" hx-swap="outerHTML">
         {% if lot.is_over %}
         <div class="text-center auction-closed">
             <h1>This Auction Lot has closed</h1>
@@ -31,7 +31,7 @@
         </div>
         {% else %}
         {% if lot.has_bids %}
-        <div class="pt-5 text-center">
+        <div class="pt-3 text-center">
             <h2>Current Proxy Bid: {{lot.actual_proxy_bid}}</h2>
             <h2>Current Real Bid Value Bid: {{lot.current_high_bid}}</h2>
             <h2>User: {{lot.current_high_bidder}}</h2>
@@ -44,8 +44,9 @@
             <p>{{lot.end_time|timeuntil}}</p>
         </div>
         {% else %}
-        <div class="pt-5 text-center">
-            <h2>Current Bid: {{lot.starting}}</h2>
+        <div class="pt-3 text-center">
+            <h1>This lot has no bids</h2>
+            <h2>Starting Bid: {{lot.starting}}</h2>
             {% if lot.current_high_bidder != request.user %}
             {% endif %}
             <p>ENDS {{ lot.end_time }}</p>

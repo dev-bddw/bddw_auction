@@ -148,9 +148,11 @@ def lot_detail_poll_hx(request, pk: int):
 
 
 def lot_list_poll_hx(request, pk: int):
-    lot = get_object_or_404(Lot, pk=pk)
-
-    return render(request, "partials/lot-list-poll-hx.html", {"lot": lot})
+    auction = get_object_or_404(Auction, pk=pk)
+    lots = Lot.objects.filter(auction=auction)
+    return render(
+        request, "partials/lot-list-poll-hx.html", {"auction": auction, "lots": lots}
+    )
 
 
 # https://htmx-django.com/blog/how-to-implement-countdown-timer-in-django-via-htm
