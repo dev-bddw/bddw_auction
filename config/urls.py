@@ -15,6 +15,7 @@ urlpatterns = [
     # User management
     path("users/", include("bddw_auction.users.urls", namespace="users")),
     path("lots/", include("lots.urls", namespace="lots")),
+    path("account/", include("orders.urls", namespace="account")),
     path("accounts/", include("allauth.urls")),
     # Your stuff: custom urls includes go here
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

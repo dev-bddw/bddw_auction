@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+
+<table class="table">
+    <thead>
+        <h1>My Cart -- {{cart.id}}</h1>
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">AUCTION</th>
+        <th scope="col">ITEM NAME</th>
+        <th scope="col">WINNING BID</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for lot in lots  %}
+      <tr>
+        <th scope="row">{{lot.id}}</th>
+        <td>{{lot.auction.name}}</td>
+        <td><a href="{{lot.get_absolute_url}}">{{lot.name}}</a></td>
+        <td>{{lot.price}}
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+{% endblock content %}
+
+
+
+{% block inline_javascript %}
+<script>
+    function closeModal() {
+        var container = document.getElementById("modals-here")
+        var backdrop = document.getElementById("modal-backdrop")
+        var modal = document.getElementById("modal")
+
+        modal.classList.remove("show")
+        backdrop.classList.remove("show")
+        location.reload()
+
+        setTimeout(function() {
+            container.removeChild(backdrop)
+            container.removeChild(modal)
+        }, 200)
+    }
+</script>
+{% endblock inline_javascript %}

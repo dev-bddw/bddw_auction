@@ -59,6 +59,10 @@ class Lot(models.Model):
     is_closed = models.BooleanField(default=False)
     is_paid = models.BooleanField(default=False)
 
+    cart = models.ForeignKey(
+        "orders.Cart", blank=True, null=True, on_delete=models.PROTECT
+    )
+
     def __str__(self):
         return self.name
 
