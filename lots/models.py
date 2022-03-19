@@ -62,6 +62,9 @@ class Lot(models.Model):
     cart = models.ForeignKey(
         "orders.Cart", blank=True, null=True, on_delete=models.PROTECT
     )
+    order = models.ForeignKey(
+        "orders.Order", blank=True, null=True, on_delete=models.PROTECT
+    )
 
     def __str__(self):
         return self.name

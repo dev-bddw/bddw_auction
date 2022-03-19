@@ -1,6 +1,12 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
 
+{% block javascript %}
+{{block.super}}
+<script src="https://js.stripe.com/v3/"></script>
+{% endblock %}
+
+
 
 {% block content %}
 
@@ -12,6 +18,7 @@
         <th scope="col">AUCTION</th>
         <th scope="col">ITEM NAME</th>
         <th scope="col">WINNING BID</th>
+        <th scope="col"></th>
       </tr>
     </thead>
     <tbody>
@@ -20,11 +27,17 @@
         <th scope="row">{{lot.id}}</th>
         <td>{{lot.auction.name}}</td>
         <td><a href="{{lot.get_absolute_url}}">{{lot.name}}</a></td>
-        <td>{{lot.price}}
+        <td>{{lot.price}}</td>
       </tr>
       {% endfor %}
     </tbody>
   </table>
+  <div>
+      <p class="text-right">Total: {{cart.total_value}} </p>
+      <button id="submitBtn" class="text-right btn btn-primary">Checkout</button>
+  <div>
+
+
 
 {% endblock content %}
 

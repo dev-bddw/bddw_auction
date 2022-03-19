@@ -287,7 +287,7 @@ SOCIALACCOUNT_FORMS = {"signup": "bddw_auction.users.forms.UserSocialSignupForm"
 
 # STRIPE
 STRIPE_SECRET_KEY = env("STRIPE_SECRET_KEY")
-STRIPE_PBULIC_KEY = env("STRIPE_PUBLIC_KEY")
+STRIPE_PUBLIC_KEY = env("STRIPE_PUBLIC_KEY")
 
 # CRONJOBS
 CRONJOBS = [("*/5 * * * *", "lots.cron.end_of_auction_check")]
