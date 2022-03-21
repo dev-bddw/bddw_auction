@@ -21,6 +21,9 @@ class Cart(models.Model):
     def lots(self):
         return Lot.objects.filter(cart=self)
 
+    def update_cart_value(self):
+        self.save()
+
 
 class Order(models.Model):
     user = models.OneToOneField(User, blank=True, null=True, on_delete=models.PROTECT)

@@ -13,7 +13,6 @@ def cart_view(request):
 
     if len(Cart.objects.filter(user=request.user)) > 0:
         cart = Cart.objects.filter(user=request.user)[0]
-        cart.save()
     else:
         cart = Cart.objects.create(user=request.user)
         cart.save()
@@ -22,7 +21,7 @@ def cart_view(request):
         is_paid=True
     ).update(cart=cart)
 
-    cart.save()
+    cart.update_cart_value()
 
     return render(
         request, "my-cart.html", {"cart": cart, "lots": Lot.objects.filter(cart=cart)}
@@ -139,8 +138,10 @@ def stripe_payment_webhook(request):
 
 
 def completed_orders_list_view(request):
+    # a list of paid orders
     pass
 
 
 def completed_orders_detail_view(request):
+    # the lots inside the paid order, maybe shipping info, etc
     pass
