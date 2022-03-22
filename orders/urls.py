@@ -6,6 +6,7 @@ from .views import (
     checkout_success,
     create_checkout_session,
     stripe_config,
+    stripe_webhook,
 )
 
 app_name = "account"
@@ -18,4 +19,5 @@ urlpatterns = [
     ),
     path("success/", view=checkout_success),
     path("cancelled/", view=checkout_failure),
+    path("webhook", view=stripe_webhook),
 ]

@@ -1,3 +1,5 @@
+import json
+
 import stripe
 from django.http.response import HttpResponse, JsonResponse
 from django.shortcuts import render
@@ -72,7 +74,7 @@ def create_checkout_session(request):
                     }
                 ],
             )
-            this_order.checkout_session_id = checkout_session["id"]
+            this_order.stripe_checkout_session_id = checkout_session["id"]
             this_order.save()
             # then we need to setup web hooks so strip can tell the order_db record if it was success or not
             return JsonResponse({"sessionId": checkout_session["id"]})
@@ -85,56 +87,55 @@ def checkout_success(request):
 
     checkout_id = request.GET["session_id"] if request.GET["session_id"] else None
 
-    order = Order.objects.get(checkout_session_id=checkout_id)
+    order = Order.objects.get(stripe_checkout_session_id=checkout_id)
 
-    for lot in Lot.objects.filter(order=order):
-        # remove from user's cart
-        lot.cart = None
-        # mark it paid so it doesn't get added to cart again
-        lot.is_paid = True
-        lot.save()
+    Lot.objects.filter(order=order).update(cart=None, is_paid=True)
 
     return HttpResponse(f"Success for {checkout_id}")
 
 
 def checkout_failure(request):
-    return HttpResponse("Failure")
+    return HttpResponse("Something went wrong")
 
 
 # EXAMPLE ENDPOINT https://testdriven.io/blog/django-stripe-tutorial/
-# @csrf_exempt
-# def stripe_webhook(request):
-#     stripe.api_key = settings.STRIPE_SECRET_KEY
-#     endpoint_secret = settings.STRIPE_ENDPOINT_SECRET
-#     payload = request.body
-#     sig_header = request.META['HTTP_STRIPE_SIGNATURE']
-#     event = None
+@csrf_exempt
+def stripe_webhook(request):
+    stripe.api_key = STRIPE_SECRET_KEY
+    endpoint_secret = (
+        "whsec_c92b8c238da9616cc17dda806b6b7b6ddb8b3b0dfe246229a5e8358c7ef95f0b"
+    )
+    payload = request.body
+    sig_header = request.META["HTTP_STRIPE_SIGNATURE"]
+    event = None
 
-#     try:
-#         event = stripe.Webhook.construct_event(
-#             payload, sig_header, endpoint_secret
-#         )
-#     except ValueError as e:
-#         # Invalid payload
-#         return HttpResponse(status=400)
-#     except stripe.error.SignatureVerificationError as e:
-#         # Invalid signature
-#         return HttpResponse(status=400)
+    try:
+        event = stripe.Webhook.construct_event(payload, sig_header, endpoint_secret)
+    except ValueError as e:
+        # Invalid payload
+        return HttpResponse(status=400)
+    except stripe.error.SignatureVerificationError as e:
+        # Invalid signature
+        return HttpResponse(status=400)
 
-#     # Handle the checkout.session.completed event
-#     if event['type'] == 'checkout.session.completed':
-#         print("Payment was successful.")
-#         # TODO: run some custom code here
+    checkout_session_id = event["data"]["object"]["id"]
+    order = Order.objects.get(stripe_checkout_session_id=checkout_session_id)
 
-#     return HttpResponse(status=200)
+    # Handle the checkout.session.completed event
+    if event["type"] == "checkout.session.completed":
+        order.paid = True
+        order.stripe_session_data = json.loads(payload.decode("UTF-8"))
+        order.save()
 
+    if event["type"] == "checkout.session.async_payment_failed":
+        # to do: make a notification for user that this payment actually failed
+        Lot.objects.filter(order=order).update(is_paid=False)
+        order.paid = False
+        order.stripe_session_data = json.loads(payload.decode("UTF-8"))
+        order.save()
+        pass
 
-def stripe_payment_webhook(request):
-    # if failed
-    # mark items as unpaid so they are added back to cart
-    # if success
-    # change order status to paid
-    pass
+    return HttpResponse(status=200)
 
 
 def completed_orders_list_view(request):
@@ -144,4 +145,12 @@ def completed_orders_list_view(request):
 
 def completed_orders_detail_view(request):
     # the lots inside the paid order, maybe shipping info, etc
+    pass
+
+
+def my_bids(request):
+    pass
+
+
+def my_watchlist(request):
     pass

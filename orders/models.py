@@ -26,7 +26,7 @@ class Cart(models.Model):
 
 
 class Order(models.Model):
-    user = models.OneToOneField(User, blank=True, null=True, on_delete=models.PROTECT)
+    user = models.ForeignKey(User, blank=True, null=True, on_delete=models.PROTECT)
     paid = models.BooleanField(default=False, blank=False, null=False)
     items_value = models.DecimalField(
         default=0, blank=True, null=True, max_digits=10, decimal_places=2
@@ -45,6 +45,10 @@ class Order(models.Model):
         blank=True,
         null=True,
     )
-    checkout_session_id = models.CharField(
+
+    # stripe
+
+    stripe_checkout_session_id = models.CharField(
         default=None, blank=True, null=True, max_length=200
     )
+    stripe_session_data = models.CharField(blank=True, null=True, max_length=10000)
