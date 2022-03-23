@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 
 from bddw_auction.users.models import User
 from lots.models import Lot
@@ -52,3 +53,14 @@ class Order(models.Model):
         default=None, blank=True, null=True, max_length=200
     )
     stripe_session_data = models.CharField(blank=True, null=True, max_length=10000)
+
+    stripe_payment_intent_id = models.CharField(
+        default=None, blank=True, null=True, max_length=200
+    )
+
+    stripe_payment_data = models.CharField(blank=True, null=True, max_length=10000)
+    stripe_last_four = models.CharField(blank=True, null=True, max_length=5)
+    stripe_payment_status = models.CharField(blank=True, null=True, max_length=10000)
+
+    def get_absolute_url(self):
+        return reverse("account:orders-detail", kwargs={"pk": self.pk})

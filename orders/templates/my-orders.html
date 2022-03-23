@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block javascript %}
+{{block.super}}
+<script src="https://js.stripe.com/v3/"></script>
+{% endblock %}
+
+
+
+{% block content %}
+
+<table class="table">
+    <thead>
+        <h1>My ORDERS -- {{cart.id}}</h1>
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">AUCTION</th>
+        <th scope="col">PAID</th>
+        <th scope="col">STATUS</th>
+        <th scope="col">AMOUNT</th>
+        <th scope="col">CARD NUMBER</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for order in orders  %}
+      <tr>
+        <th scope="row"><a href="{{order.get_absolute_url}}">{{order.id}}</a></th>
+        <td>Auction Name</td>
+        <td>{{order.paid}}</td>
+        <td>{{order.stripe_payment_status}}</td>
+        <td>{{order.items_value}}</td>
+        <td>{{order.stripe_last_four}}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <div>
+      <p class="text-right">Total: {{cart.total_value}} </p>
+      <button id="submitBtn" class="text-right btn btn-primary">Checkout</button>
+  <div>
+
+
+
+{% endblock content %}
+
+
+
+{% block inline_javascript %}
+<script>
+    function closeModal() {
+        var container = document.getElementById("modals-here")
+        var backdrop = document.getElementById("modal-backdrop")
+        var modal = document.getElementById("modal")
+
+        modal.classList.remove("show")
+        backdrop.classList.remove("show")
+        location.reload()
+
+        setTimeout(function() {
+            container.removeChild(backdrop)
+            container.removeChild(modal)
+        }, 200)
+    }
+</script>
+{% endblock inline_javascript %}

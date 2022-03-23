@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block javascript %}
+{{block.super}}
+<script src="https://js.stripe.com/v3/"></script>
+{% endblock %}
+
+
+
+{% block content %}
+
+<table class="table">
+    <thead>
+        <h1>My Lots in Order #{{order.pk}}</h1>
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col"></th>
+        <th scope="col">Lot Info</th>
+        <th scope="col">My winning bid</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for lot in lots  %}
+      <tr>
+        <th scope="row">{{lot.id}}</th>
+        <td><img src="{{lot.img}}" width="200"></td>
+        <td><a href="{{lot.get_absolute_url}}">{{lot.name}}</a>
+        <p></p>
+        <p>{{lot.auction.name}}</p>
+        <p>{{lot.end_time}}</p>
+        <p><a href="#">My bids on {{lot.name}}</a></p>
+        </td>
+        <td>{{lot.price}}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <div>
+      <p class="text-right">Total: {{order.items_value}}</p>
+      <p>Status: {{order.stripe_payment_status}}<p>
+      <pre>{{order.stripe_payment_data | pprint }}</pre>
+      <pre>{{order.stripe_session_data | pprint }}</pre>
+  <div>
+
+
+
+{% endblock content %}
+
+
+
+{% block inline_javascript %}
+<script>
+    function closeModal() {
+        var container = document.getElementById("modals-here")
+        var backdrop = document.getElementById("modal-backdrop")
+        var modal = document.getElementById("modal")
+
+        modal.classList.remove("show")
+        backdrop.classList.remove("show")
+        location.reload()
+
+        setTimeout(function() {
+            container.removeChild(backdrop)
+            container.removeChild(modal)
+        }, 200)
+    }
+</script>
+{% endblock inline_javascript %}

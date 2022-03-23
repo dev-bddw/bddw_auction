@@ -73,8 +73,13 @@ def create_checkout_session(request):
                         "amount": f"{int(this_order.items_value * 100)}",
                     }
                 ],
+                metadata={
+                    "auction_order_id": this_order.pk,
+                    "auction_user_id": this_order.user.pk,
+                },
             )
             this_order.stripe_checkout_session_id = checkout_session["id"]
+            this_order.stripe_payment_intent_id = checkout_session["payment_intent"]
             this_order.save()
             # then we need to setup web hooks so strip can tell the order_db record if it was success or not
             return JsonResponse({"sessionId": checkout_session["id"]})
@@ -118,13 +123,25 @@ def stripe_webhook(request):
         # Invalid signature
         return HttpResponse(status=400)
 
-    checkout_session_id = event["data"]["object"]["id"]
-    order = Order.objects.get(stripe_checkout_session_id=checkout_session_id)
+    # Our event handlers
 
-    # Handle the checkout.session.completed event
     if event["type"] == "checkout.session.completed":
-        order.paid = True
+        checkout_session_id = event["data"]["object"]["id"]
+        order = Order.objects.get(stripe_checkout_session_id=checkout_session_id)
         order.stripe_session_data = json.loads(payload.decode("UTF-8"))
+        order.save()
+
+    if event["type"] == "payment_intent.succeeded":
+        payment_intent_id = event["data"]["object"]["id"]
+        order = Order.objects.get(stripe_payment_intent_id=payment_intent_id)
+        order.stripe_payment_data = json.loads(payload.decode("UTF-8"))
+        order.stripe_last_four = event["data"]["object"]["charges"]["data"][0][
+            "payment_method_details"
+        ]["card"]["last4"]
+        order.stripe_payment_status = event["data"]["object"]["charges"]["data"][0][
+            "status"
+        ]
+        order.paid = True
         order.save()
 
     if event["type"] == "checkout.session.async_payment_failed":
@@ -138,14 +155,21 @@ def stripe_webhook(request):
     return HttpResponse(status=200)
 
 
-def completed_orders_list_view(request):
-    # a list of paid orders
-    pass
+def orders_list_view(request):
+    return render(
+        request, "my-orders.html", {"orders": Order.objects.filter(user=request.user)}
+    )
 
 
-def completed_orders_detail_view(request):
-    # the lots inside the paid order, maybe shipping info, etc
-    pass
+def orders_detail_view(request, pk):
+    return render(
+        request,
+        "my-orders-detail.html",
+        {
+            "order": Order.objects.get(pk=pk),
+            "lots": Lot.objects.filter(order=Order.objects.get(pk=pk)),
+        },
+    )
 
 
 def my_bids(request):

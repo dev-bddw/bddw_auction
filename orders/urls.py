@@ -5,6 +5,8 @@ from .views import (
     checkout_failure,
     checkout_success,
     create_checkout_session,
+    orders_detail_view,
+    orders_list_view,
     stripe_config,
     stripe_webhook,
 )
@@ -17,6 +19,8 @@ urlpatterns = [
     path(
         "create-checkout-session/", view=create_checkout_session, name="create_session"
     ),
+    path("my-orders/", view=orders_list_view, name="orders"),
+    path("my-orders/<pk>", view=orders_detail_view, name="orders-detail"),
     path("success/", view=checkout_success),
     path("cancelled/", view=checkout_failure),
     path("webhook", view=stripe_webhook),
