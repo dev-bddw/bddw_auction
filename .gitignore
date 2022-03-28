@@ -275,4 +275,5 @@ bddw_auction/media/
 .ipython/
 .env
 .envs/*
-!.envs/.local/
+!.envs/.local/.django
+!.envs/.local/.postgres

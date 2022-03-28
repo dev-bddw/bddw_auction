@@ -18,6 +18,7 @@ services:
       - .:/app:z
     env_file:
       - ./.envs/.local/.django
+      - ./.envs/.local/.stripe
       - ./.envs/.local/.postgres
     ports:
       - "8000:8000"
