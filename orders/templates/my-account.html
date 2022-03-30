@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+<div style="height: 40px"></div>
+<div class="row">
+    <div class="col-2">
+    <p>MY PROFILE</p>
+    <a href="{% url 'account:bids' %}"><p>MY BIDS</p></a>
+    <a href="{% url 'account:cart' %}"><p>CHECKOUT</p></a>
+    <a href="{% url 'account:orders' %}"><p>PAST ORDERS</p></a>
+    <p>MY WATCH LIST</p>
+    </div>
+    <div class="col">
+        {% block account_content %}
+        {% endblock account_content %}
+    </div>
+{% endblock content %}

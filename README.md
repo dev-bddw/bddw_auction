@@ -5,48 +5,18 @@ Quick POC for Django Auction Site
 [![Built with Cookiecutter Django](https://img.shields.io/badge/built%20with-Cookiecutter%20Django-ff69b4.svg?logo=cookiecutter)](https://github.com/cookiecutter/cookiecutter-django/)
 [![Black code style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 
-## Settings
+# To Get Started
 
-Moved to [settings](http://cookiecutter-django.readthedocs.io/en/latest/settings.html).
+Create a new .stripe env file in .envs/.local/ and define your stripe test keys.
 
-## Basic Commands
+# Start docker using local config
 
-### Setting Up Your Users
+docker-compose -f local.yml up --build
 
--   To create a **normal user account**, just go to Sign Up and fill out the form. Once you submit it, you'll see a "Verify Your E-mail Address" page. Go to your console to see a simulated email verification message. Copy the link into your browser. Now the user's email should be verified and ready to go.
+# create super user
 
--   To create an **superuser account**, use this command:
+docker-compose -f local.yml run --rm django python manage.py createsuperuser
 
-        $ python manage.py createsuperuser
+# view the site
 
-For convenience, you can keep your normal user logged in on Chrome and your superuser logged in on Firefox (or similar), so that you can see how the site behaves for both kinds of users.
-
-### Type checks
-
-Running type checks with mypy:
-
-    $ mypy bddw_auction
-
-### Test coverage
-
-To run the tests, check your test coverage, and generate an HTML coverage report:
-
-    $ coverage run -m pytest
-    $ coverage html
-    $ open htmlcov/index.html
-
-#### Running tests with pytest
-
-    $ pytest
-
-### Live reloading and Sass CSS compilation
-
-Moved to [Live reloading and SASS compilation](http://cookiecutter-django.readthedocs.io/en/latest/live-reloading-and-sass-compilation.html).
-
-## Deployment
-
-The following details how to deploy this application.
-
-### Docker
-
-See detailed [cookiecutter-django Docker documentation](http://cookiecutter-django.readthedocs.io/en/latest/deployment-with-docker.html).
+http://localhost:8000/

@@ -1,16 +1,19 @@
 import json
 
 import stripe
+from django.contrib.auth.decorators import login_required
 from django.http.response import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 
+from bids.models import Bid
 from config.settings.base import STRIPE_PUBLIC_KEY, STRIPE_SECRET_KEY
 from lots.models import Lot
 
 from .models import Cart, Order
 
 
+@login_required
 def cart_view(request):
 
     if len(Cart.objects.filter(user=request.user)) > 0:
@@ -31,6 +34,7 @@ def cart_view(request):
 
 
 @csrf_exempt
+@login_required
 def stripe_config(request):
     if request.method == "GET":
         stripe_config = {"publicKey": STRIPE_PUBLIC_KEY}
@@ -38,6 +42,7 @@ def stripe_config(request):
 
 
 @csrf_exempt
+@login_required
 def create_checkout_session(request):
 
     my_cart = Cart.objects.filter(user=request.user)[0]
@@ -87,6 +92,7 @@ def create_checkout_session(request):
             return JsonResponse({"error": str(e)})
 
 
+@login_required
 def checkout_success(request):
     # if checkout is intially success, we want to remove items from cart
 
@@ -155,12 +161,14 @@ def stripe_webhook(request):
     return HttpResponse(status=200)
 
 
+@login_required
 def orders_list_view(request):
     return render(
         request, "my-orders.html", {"orders": Order.objects.filter(user=request.user)}
     )
 
 
+@login_required
 def orders_detail_view(request, pk):
     return render(
         request,
@@ -172,8 +180,10 @@ def orders_detail_view(request, pk):
     )
 
 
+@login_required
 def my_bids(request):
-    pass
+    bids = Bid.objects.filter(user=request.user)
+    return render(request, "my-bids.html", {"bids": bids})
 
 
 def my_watchlist(request):

@@ -12,30 +12,29 @@
 
 <table class="table">
     <thead>
-        <h1>My ORDERS -- {{cart.id}}</h1>
+        <h1>MY BIDS</h1>
       <tr>
         <th scope="col">ID</th>
         <th scope="col">AUCTION</th>
-        <th scope="col">PAID</th>
-        <th scope="col">STATUS</th>
-        <th scope="col">AMOUNT</th>
-        <th scope="col">CARD NUMBER</th>
+        <th scope="col">ITEM NAME</th>
+        <th scope="col">MAX BID</th>
+        <th scope="col">REAL BID</th>
+        <th scope="col">STATUS (won, winning, outbid, etc)</th>
       </tr>
     </thead>
     <tbody>
-    {% for order in orders  %}
+    {% for bid in bids  %}
       <tr>
-        <th scope="row"><a href="{{order.get_absolute_url}}">{{order.id}}</a></th>
-        <td>Auction Name</td>
-        <td>{{order.paid}}</td>
-        <td>{{order.stripe_payment_status}}</td>
-        <td>{{order.items_value}}</td>
-        <td>{{order.stripe_last_four}}</td>
+        <th scope="row">{{bid.id}}</th>
+        <td>{{bid.lot.auction.name}}</td>
+        <td><a href="{{lot.get_absolute_url}}">{{bid.lot.name}}</a></td>
+        <td>{{bid.value}}</td>
+        <td>{{bid.value}}</td>
+        <td>{{bid.value}}</td>
       </tr>
       {% endfor %}
     </tbody>
   </table>
-
 
 
 
